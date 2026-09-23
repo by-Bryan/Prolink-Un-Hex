@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Un-hex SoundLink</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg-primary: #0A0A0F;
+    --bg-secondary: #14151F;
+    --bg-card: #1A1B28;
+    --accent: #E85D04;
+    --accent-glow: rgba(232, 93, 4, 0.15);
+    --accent-soft: #FF8A3D;
+    --text-primary: #F0EDE8;
+    --text-secondary: #9A97A0;
+    --text-muted: #5C5A63;
+    --border: rgba(255,255,255,0.06);
+    --border-accent: rgba(232, 93, 4, 0.3);
+  }
+
+  /* This is a deliberately dark-only design — the product's visual identity is built around a dark ground */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding-inline: 0;
+    padding-block: 0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: 24px;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 100;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.02em;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+    font-size: 0.85rem; font-weight: 400;
+  }
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text-primary); }
+
+  /* HERO */
+  .hero {
+    padding: 80px 0 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    min-height: 520px;
+  }
+  .hero-text { display: flex; flex-direction: column; gap: 24px; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-glow);
+    border: 1px solid var(--border-accent);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    color: var(--text-primary);
+  }
+  h1 span { color: var(--accent); }
+  .hero-desc {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 440px;
+    font-weight: 300;
+  }
+  .hero-price {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-top: 8px;
+  }
+  .price-main {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .price-note {
+    font-size: 0.8rem; color: var(--text-muted);
+  }
+  .hero-cta {
+    display: flex; gap: 12px; margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent);
+    color: #fff; font-weight: 600;
+    font-size: 0.9rem;
+    padding: 14px 32px;
+    border-radius: 8px;
+    border: none; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #d14f00; transform: translateY(-1px); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 500; font-size: 0.9rem;
+    padding: 14px 28px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: var(--text-muted); color: var(--text-primary); }
+
+  /* PRODUCT VISUAL */
+  .hero-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .product-display {
+    position: relative;
+    width: 280px;
+    height: 360px;
+  }
+  /* Phone outline */
+  .phone-frame {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 180px; height: 340px;
+    border: 2px solid var(--border);
+    border-radius: 24px;
+    background: var(--bg-secondary);
+    overflow: hidden;
+  }
+  .phone-screen {
+    position: absolute;
+    top: 12px; left: 8px; right: 8px; bottom: 12px;
+    border-radius: 16px;
+    background: linear-gradient(170deg, #111320 0%, #0D0E18 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+  }
+  .screen-wave {
+    width: 80%;
+    height: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .screen-wave svg {
+    width: 100%;
+    height: 100%;
+  }
+  .wave-line {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    fill: none;
+    opacity: 0.8;
+  }
+  .wave-line:nth-child(2) { stroke: var(--accent-soft); opacity: 0.4; stroke-width: 1; }
+  .wave-line:nth-child(3) { stroke: var(--text-muted); opacity: 0.3; stroke-width: 0.8; }
+  .screen-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.55rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .screen-status {
+    font-size: 0.5rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  /* Microphone device */
+  .mic-device {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 36px;
+    background: linear-gradient(180deg, #2A2C38 0%, #1E1F2B 100%);
+    border-radius: 0 0 10px 10px;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+  .mic-device::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px; height: 6px;
+    background: #3A3C48;
+    border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .mic-grille {
+    width: 3px; height: 3px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  .mic-grille.active {
+    background: var(--accent);
+    opacity: 1;
+    box-shadow: 0 0 6px var(--accent);
+  }
+  /* Glow effect */
+  .glow-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* FEATURES */
+  .section { padding: 64px 0; }
+  .section-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .section-eyebrow {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .feature-card:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card);
+  }
+  .feature-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-glow);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  .feature-icon svg {
+    width: 22px; height: 22px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .feature-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .feature-desc {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  /* SPECS */
+  .specs-section {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 0;
+  }
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    text-align: center;
+  }
+  .spec-item { display: flex; flex-direction: column; gap: 8px; }
+  .spec-value {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .spec-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* COMPAT */
+  .compat-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .compat-chip {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .compat-chip .dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  /* APP SECTION */
+  .app-link-section {
+    text-align: center;
+    padding: 80px 0;
+  }
+  .app-link-section h2 { margin-bottom: 16px; }
+  .app-link-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .footer-legal {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 48px 0 40px;
+      min-height: auto;
+      text-align: center;
+    }
+    .hero-text { align-items: center; }
+    .hero-desc { max-width: 100%; }
+    .hero-cta { justify-content: center; }
+    .hero-visual { order: -1; }
+    .product-display { width: 220px; height: 300px; }
+    .phone-frame { width: 150px; height: 280px; }
+    .mic-device { width: 150px; height: 30px; }
+    .mic-device::before { width: 18px; height: 5px; }
+    .glow-ring { width: 260px; height: 340px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .specs-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 480px) {
+    .page-wrapper { padding-inline: 16px; }
+    nav { padding: 0 16px; }
+    .hero-cta { flex-direction: column; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">UH</div>
+      Un-hex Motors
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Características</a></li>
+      <li><a href="#specs">Especificaciones</a></li>
+      <li><a href="#compat">Compatibilidad</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-badge">Nuevo accesorio</div>
+      <h1>SoundLink <span>Pro</span></h1>
+      <p class="hero-desc">Micrófono amplificador compacto diseñado para trabajar con la app Un-hex Motors. Captura frecuencias mecánicas con mayor precisión en dispositivos de generaciones anteriores.</p>
+      <div class="hero-price">
+        <span class="price-main">$349 MXN</span>
+        <span class="price-note">IVA incluido</span>
+      </div>
+      <div class="hero-cta">
+        <button class="btn-primary">
+          Obtener SoundLink
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-secondary">Ver especificaciones</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="glow-ring"></div>
+      <div class="product-display">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="screen-label">Un-hex Motors</div>
+            <div class="screen-wave">
+              <svg viewBox="0 0 120 40">
+                <polyline class="wave-line" points="0,20 8,15 16,25 24,12 32,28 40,18 48,22 56,10 64,30 72,16 80,24 88,14 96,26 104,20 112,18 120,20"/>
+                <polyline class="wave-line" points="0,22 10,18 20,26 30,14 40,24 50,20 60,16 70,28 80,12 90,22 100,18 110,24 120,20"/>
+                <polyline class="wave-line" points="0,20 12,22 24,18 36,24 48,16 60,22 72,20 84,18 96,24 108,20 120,21"/>
+              </svg>
+            </div>
+            <div class="screen-status">Escuchando frecuencias...</div>
+          </div>
+        </div>
+        <div class="mic-device">
+          <span class="mic-grille"></span>
+          <span class="mic-grille"></span>
+          <span class="mic-grille active"></span>
+          <span class="mic-grille"></span>
+          <span class="mic-grille active"></span>
+          <span class="mic-grille"></span>
+          <span class="mic-grille active"></span>
+          <span class="mic-grille"></span>
+          <span class="mic-grille"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="section" id="features">
+  <div class="page-wrapper">
+    <div class="section-header">
+      <div class="section-eyebrow">Características</div>
+      <h2>Diseñado para escuchar lo que importa</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        </div>
+        <div class="feature-title">Amplificación de alta fidelidad</div>
+        <p class="feature-desc">Amplifica frecuencias entre 20 Hz y 16 kHz, el rango donde se manifiestan la mayoría de las fallas mecánicas automotrices.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div class="feature-title">Plug & Play</div>
+        <p class="feature-desc">Se conecta directamente al puerto de carga del teléfono. Sin baterías, sin bluetooth, sin configuración adicional. Conecta y la app lo detecta.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-title">Reducción de ruido ambiental</div>
+        <p class="feature-desc">Filtro analógico integrado que atenúa el ruido de fondo — viento, tráfico, voces — para que la app reciba la señal mecánica limpia.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">Sensibilidad calibrada</div>
+        <p class="feature-desc">Cápsula de micrófono calibrada para capturar vibraciones de baja amplitud que el micrófono integrado de teléfonos antiguos no alcanza.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <div class="feature-title">Diseño compacto</div>
+        <p class="feature-desc">Del ancho exacto del teléfono, con perfil bajo de 8 mm. Se adapta sin estorbar y cabe en cualquier bolsillo junto con el dispositivo.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </div>
+        <div class="feature-title">Compatible con Un-hex Motors</div>
+        <p class="feature-desc">Reconocimiento automático por la app. Al conectar, Un-hex Motors cambia al modo de entrada externa para un diagnóstico más preciso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="specs-section" id="specs">
+  <div class="page-wrapper">
+    <div class="section-header">
+      <div class="section-eyebrow">Especificaciones</div>
+      <h2>Lo técnico, sin rodeos</h2>
+    </div>
+    <div class="specs-grid">
+      <div class="spec-item">
+        <div class="spec-value">20–16k</div>
+        <div class="spec-label">Rango Hz</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-value">+18 dB</div>
+        <div class="spec-label">Ganancia</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-value">8 mm</div>
+        <div class="spec-label">Perfil</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-value">12 g</div>
+        <div class="spec-label">Peso</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="compat">
+  <div class="page-wrapper">
+    <div class="section-header">
+      <div class="section-eyebrow">Compatibilidad</div>
+      <h2>Funciona con tu teléfono</h2>
+    </div>
+    <div class="compat-row">
+      <div class="compat-chip"><span class="dot"></span> USB-C</div>
+      <div class="compat-chip"><span class="dot"></span> Lightning</div>
+      <div class="compat-chip"><span class="dot"></span> Android 8+</div>
+      <div class="compat-chip"><span class="dot"></span> iOS 14+</div>
+    </div>
+  </div>
+</section>
+
+<section class="app-link-section">
+  <div class="page-wrapper">
+    <h2>Potencia tu diagnóstico con <span style="color:var(--accent)">Un-hex Motors</span></h2>
+    <p class="app-link-desc">El SoundLink Pro fue diseñado como complemento de la app. Para equipos que necesitan capturar hasta la vibración más sutil, este accesorio cierra la brecha entre un teléfono antiguo y un análisis profesional.</p>
+    <button class="btn-primary">
+      Descargar Un-hex Motors
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </button>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">Un-hex Motors © 2026</div>
+    <div class="footer-legal">Todos los derechos reservados</div>
+  </div>
+</footer>
+
+</body>
+</html>
